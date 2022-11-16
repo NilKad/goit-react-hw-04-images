@@ -6,6 +6,8 @@ export const Modal = ({ onLoadingFinish, modalItem, setModalItem }) => {
   const { largeImageURL, tags } = modalItem;
 
   const onClickOverlay = e => {
+    // modalClose={modalClose}
+    console.log('onClickOverlay');
     e.target === e.currentTarget && setModalItem();
   };
 

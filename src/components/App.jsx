@@ -127,7 +127,6 @@ export default function App() {
         <Modal
           onLoadingFinish={loadingFinish}
           modalItem={modalItem}
-          // modalClose={modalClose}
           setModalItem={setModalItem}
         />
       )}
