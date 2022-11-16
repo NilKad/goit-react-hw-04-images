@@ -1,48 +1,44 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useEffect } from 'react';
 import css from './Modal.module.css';
 
-export class Modal extends Component {
-  static PrpoTypes = {
-    modalClose: PropTypes.func.isRequired,
-    onLoadingFinish: PropTypes.func.isRequired,
-    modalItem: PropTypes.shape({
-      largeImageURL: PropTypes.string.isRequired,
-      tags: PropTypes.string.isRequired,
-    }),
+export const Modal = ({ onLoadingFinish, modalItem, setModalItem }) => {
+  const { largeImageURL, tags } = modalItem;
+
+  const onClickOverlay = e => {
+    e.target === e.currentTarget && setModalItem();
   };
 
-  onEscape = e => {
-    console.log('keyCode: ', e);
-    if (e.code === 'Escape') {
-      this.props.modalClose();
-    }
-  };
-
-  onClickOverlay = e => {
-    e.target === e.currentTarget && this.props.modalClose();
-  };
-
-  componentDidMount() {
+  useEffect(() => {
+    const onEscape = e => {
+      console.log('keyCode: ', e);
+      if (e.code === 'Escape') {
+        setModalItem();
+      }
+    };
     console.log('modal open!');
-    console.log(this.props);
-    window.addEventListener('keydown', this.onEscape);
-  }
+    window.addEventListener('keydown', onEscape);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscape);
-  }
+    return () => {
+      console.log('unmount event!!!!');
+      window.removeEventListener('keydown', onEscape);
+    };
+  }, [setModalItem]);
 
-  render() {
-    const { onLoadingFinish } = this.props;
-    const { modalItem } = this.props;
-    const { largeImageURL, tags } = modalItem;
-    return (
-      <div className={css.overlay} onClick={this.onClickOverlay}>
-        <div className={css.modal}>
-          <img src={largeImageURL} alt={tags} onLoad={onLoadingFinish}></img>
-        </div>
+  return (
+    <div className={css.overlay} onClick={onClickOverlay}>
+      <div className={css.modal}>
+        <img src={largeImageURL} alt={tags} onLoad={onLoadingFinish}></img>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Modal.propTypes = {
+  setModalItem: PropTypes.func.isRequired,
+  onLoadingFinish: PropTypes.func.isRequired,
+  modalItem: PropTypes.shape({
+    largeImageURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+  }),
+};

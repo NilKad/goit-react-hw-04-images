@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 export const fetchApi = async ({
   searchString,
   page = 1,
-  addItemGallery,
+  // addItemGallery,
   setTotalPage,
+  setGallery,
 }) => {
   const options = {
     url: 'https://pixabay.com/api/',
@@ -19,12 +20,24 @@ export const fetchApi = async ({
   };
   const axios = API.create(options);
 
+  const galleryFilter = list => {
+    return list.map(({ id, webformatURL, tags, largeImageURL }) => ({
+      id,
+      webformatURL,
+      tags,
+      largeImageURL,
+    }));
+  };
+
   try {
     const response = await axios.request(options);
-    addItemGallery(response.data.hits);
+    // addItemGallery(response.data.hits);
     setTotalPage(
       Math.ceil(response.data.total / response.config.params.per_page)
     );
+    page === 1
+      ? setGallery(galleryFilter(response.data.hits))
+      : setGallery(prev => [...prev, ...galleryFilter(response.data.hits)]);
     console.log('response.data: ', response);
   } catch (error) {
     console.log(error);
