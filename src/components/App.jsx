@@ -20,7 +20,7 @@ export default function App() {
   const searchSubmit = item => {
     item.preventDefault();
     setSearchString(item.currentTarget.search.value);
-    setTotalPage(1);
+    setPage(1);
     // this.setState({ searchString: item.currentTarget.search.value, page: 1 });
     window.scrollTo(0, 0);
   };
